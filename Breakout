@@ -1,0 +1,255 @@
+/* Constants for bricks */
+var NUM_ROWS = 8;
+var BRICK_TOP_OFFSET = 10;
+var BRICK_SPACING = 2;
+var NUM_BRICKS_PER_ROW = 10;
+var BRICK_HEIGHT = 10;
+var SPACE_FOR_BRICKS = getWidth() - (NUM_BRICKS_PER_ROW + 1) * BRICK_SPACING;
+var BRICK_WIDTH = SPACE_FOR_BRICKS / NUM_BRICKS_PER_ROW;
+var PADDLE;
+
+/* Constants for ball and paddle */
+var PADDLE_WIDTH = 80;
+var PADDLE_HEIGHT = 15;
+var PADDLE_OFFSET = 10;
+
+var BALL_RADIUS = 15;
+
+var ball;
+var dx = 0.5;
+var dy = 0.5;
+
+var rect;
+var exit;
+var x = 10;
+var end = 0;
+
+function start(){
+	setupRow();
+	movingBall();
+	slider();
+
+}
+
+
+
+function slider(){
+    PADDLE = new Rectangle(PADDLE_WIDTH, PADDLE_HEIGHT);
+    PADDLE.setPosition(0,getHeight()-PADDLE_OFFSET-PADDLE_HEIGHT);
+    add(PADDLE);
+    mouseMoveMethod(onMouseMove);
+}
+
+
+
+function onMouseMove(e){
+    var pos = e.getX();
+    while(pos>PADDLE.getX()+40){
+        PADDLE.move(1, 0);
+    }
+    while(pos<PADDLE.getX()+40){
+        PADDLE.move(-1,0);
+    }
+}
+
+function setupRow(){
+    var B = 9;
+    var A = -23;
+    var Nom = Color.RED;
+    for(var f = 0; f < 8; f++){
+    B--
+    if(B > 6){ 
+        Nom = Color.RED;
+    }else{
+    if(B > 4){ 
+        Nom = Color.ORANGE;
+    }else{
+    if(B > 2){
+        Nom = Color.GREEN;
+    }else{
+        Nom = Color.BLUE;
+    }}}
+    for(var i = 0; i < NUM_BRICKS_PER_ROW; i++){
+        var x = 0;
+        var y = 0;
+        A = A+40;
+        x= SPACE_FOR_BRICKS-A;
+        y = BRICK_TOP_OFFSET+(BRICK_HEIGHT+BRICK_SPACING)*(NUM_ROWS-B);
+        var rect = new Rectangle(BRICK_WIDTH, BRICK_HEIGHT);
+        
+        rect.setPosition(x,y);
+        rect.setColor(Nom)
+        add(rect);
+    }
+    A = -23
+    }
+}
+
+
+//???????????????????????????????????????????????????????????????????????????????????????????????//
+function movingBall(){
+    if(end!=5){
+        var x = getWidth() / 2;
+        var y = getHeight() / 2;
+        ball = new Circle(BALL_RADIUS);
+    	ball.setPosition(x, y);
+    	ball.setColor(Color.red)
+    	add(ball);
+    	
+    	setTimer(draw, 1);
+    }else{
+        var txt = new Text("Game Over", "60pt Impact");
+        txt.setPosition(getWidth()/2-170, getHeight()/2);
+        txt.setColor(Color.red);
+        add(txt);
+    }
+    
+}
+function draw(){
+	checkWalls();
+	ball.move(dx, dy);
+	//var test;
+        //test = new Circle(1);
+	    //test.setPosition(ball.getX()+ball.getRadius()-4, ball.getY()-ball.getRadius()+4);
+	    //add(test);
+	   // bottom = ball.getX(), ball.getY()+ball.getRadius()
+	   // top = ball.getX(), ball.getY()-ball.getRadius()
+	   // right = ball.getX()+ball.getRadius(), ball.getY()
+	   // left = ball.getX()-ball.getRadius(), ball.getY()
+	   
+	   //bottom right = ball.getX()+ball.getRadius()-4, ball.getY()+ball.getRadius()-4
+	   //top right = ball.getX()+ball.getRadius()-4, ball.getY()-ball.getRadius()+4
+	   //top left = ball.getX()-ball.getRadius()+4, ball.getY()-ball.getRadius()+4
+	   //bottom left = ball.getX()-ball.getRadius()+4, ball.getY()+ball.getRadius()-4
+}
+
+
+
+function checkWalls(){
+   
+    if(x!=0){
+        x--;
+    }
+    
+	
+	
+	// Bounce off right wall
+	if(ball.getX() + ball.getRadius() > getWidth()){
+		dx = -dx;
+	}
+	//collide with blocks
+
+	//top
+    if(getElementAt(ball.getX(), ball.getY()-ball.getRadius())){
+        println("yes");
+    
+    if(ball.getY()<400&&x < 1){    
+    remove(getElementAt(ball.getX(), ball.getY()-ball.getRadius()))
+    x = 100;
+
+    }
+    
+    dy = -dy;
+    
+    }
+    
+    //bottom
+    if(getElementAt(ball.getX(), ball.getY()+ball.getRadius())){
+        println("yes");
+    
+    if(ball.getY()<400&&x < 1){   
+    remove(getElementAt(ball.getX(), ball.getY()+ball.getRadius()))
+    x = 100;
+    }
+    dy = -dy;
+    }
+    
+    //right
+    if(getElementAt(ball.getX()+ball.getRadius(), ball.getY())){
+        println("yes");
+    
+    if(ball.getY()<400&&x < 1){      
+    remove(getElementAt(ball.getX()+ball.getRadius(), ball.getY()))
+    x = 100;
+    }
+    dy = -dy;
+    }
+    
+
+        //top right
+        if(getElementAt(ball.getX()-ball.getRadius()+4, ball.getY()-ball.getRadius()+4)){
+            println("yes");
+        
+        if(ball.getY()<400&&x < 1){      
+        remove(getElementAt(ball.getX()-ball.getRadius()+4, ball.getY()-ball.getRadius()+4))
+        x = 100;
+        }
+        dy = -dy;
+        }
+    
+        //bottom right
+        if(getElementAt(ball.getX()+ball.getRadius()-4, ball.getY()+ball.getRadius()-4)){
+            println("yes");
+        
+        if(ball.getY()<400&&x < 1){      
+        remove(getElementAt(ball.getX()+ball.getRadius()-4, ball.getY()+ball.getRadius()-4))
+        x = 100;
+        }
+        dy = -dy;
+        }
+    
+    //left
+    if(getElementAt(ball.getX()-ball.getRadius(), ball.getY())){
+        println("yes");
+    
+    if(ball.getY()<400&&x < 1){   
+    remove(getElementAt(ball.getX()-ball.getRadius(), ball.getY()))
+    x = 100;
+    }
+    dy = -dy;
+    }
+    
+    
+        //top left
+        if(getElementAt(ball.getX()-ball.getRadius(), ball.getY())){
+            println("yes");
+        
+        if(ball.getY()<400&&x < 1){   
+        remove(getElementAt(ball.getX()-ball.getRadius(), ball.getY()))
+        x = 100;
+        }
+        dy = -dy;
+        }
+        
+        //bottom left
+        if(getElementAt(ball.getX()-ball.getRadius()+4, ball.getY()+ball.getRadius()-4)){
+            println("yes");
+        
+        if(ball.getY()<400&&x < 1){   
+        remove(getElementAt(ball.getX()-ball.getRadius()+4, ball.getY()+ball.getRadius()-4))
+        x = 100;
+        }
+        dy = -dy;
+        }
+    	
+	
+	// Bounce off left wall
+	if(ball.getX() - ball.getRadius() < 0){
+		dx = -dx;
+	}
+	
+	// Bounce off bottom wall
+	if(ball.getY() + ball.getRadius() > getHeight()){
+		stopTimer(draw);
+		remove(ball);
+		end++;
+		movingBall();
+		dy = -dy;
+	}
+	
+	// Bounce off top wall
+	if(ball.getY() - ball.getRadius() < 0){
+		dy = -dy;
+	}
+}
+
